@@ -1,0 +1,12 @@
+FROM golang:1.12-alpine
+
+RUN mkdir -p /gocode/src /gocode/bin /gocode/pkg /gobuild/src/app && \
+    apk add --no-cache git && \
+    go get -u github.com/golang/dep/cmd/dep 
+COPY build.sh   /gocode/bin
+VOLUME ["/gobuild/src/app"]
+ENV GOPATH /gocode:/gobuild
+ENV BUILD_CONFIG DEBUG
+ENV PATH $PATH:$GOPATH/bin
+WORKDIR /gobuild/src/app
+ENTRYPOINT [ "sh", "/gocode/bin/build.sh" ]
